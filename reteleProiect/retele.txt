@@ -1,0 +1,233 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <sys/wait.h>
+#include <sys/socket.h>
+#include <sys/uio.h>
+#include <errno.h>
+
+#define READ 0
+#define WRITE 1
+#define FIFO_NAME "TGDFIFO"
+
+const int MAX_READ_SIZE = 256;
+
+const char* userConfig = "users.txt";
+const char* successfulLogin = "Login succeeded!\n";
+const char* failedLogin = "Login failed! User doesn't exist.\n";
+const char* notLoggedIn = "Command cannot be executed because there is no user logged in.\n";
+
+// https://stackoverflow.com/questions/230062/whats-the-best-way-to-check-if-a-file-exists-in-c
+int fileExists(const char* file) 
+{
+    return access(file, F_OK) != -1;
+}
+
+void UserConfigExists() 
+{
+    // access returneaza 0 daca exista fisierul. 0 != -1 => 1. daca returneaza 0, inseamna ca nu exista
+    if(!fileExists(userConfig))
+    {
+        printf("@> \"%s\" doesn't exist and program cannot be run. Create the file and run the program again.\n",userConfig);
+        exit(6);
+    }
+}
+
+//  https://stackoverflow.com/questions/13566082/how-to-check-if-a-file-has-content-or-not-using-c
+void UserConfigEmpty()
+{
+    FILE* file;
+    if(NULL == ( file = fopen(userConfig,"r") ))
+    {
+        perror("Erorr opening user config file.\n");
+        exit(7);
+    }
+
+    if( -1 == fseek( file, 0, SEEK_END ) ) 
+    {
+        perror("Error at seeking end of user config file.\n");
+        exit(8);
+    }
+
+    int filePosition = ftell( file );
+    if(filePosition == 0)
+    {
+        printf("@> %s is empty. Insert values in the file and run the program again.\n",userConfig);
+        exit(9);
+    }
+
+}
+
+void readLine(char* line,int size)
+{
+    // fgets returneaza NULL la eroare sau EOF fara sa citeasca ceva;
+    if( fgets(line,size,stdin) == NULL )
+    {
+        return;
+    }
+
+    // daca if e bypassed, inseamna ca citirea a fost un sucess;
+    // fgets also read newlines, deci suprascriu newline.
+    line[strlen(line)-1] = 0;
+
+}
+
+int main()
+{
+
+    UserConfigExists();
+    UserConfigEmpty();
+
+    int loggedIn = 0;
+    int running = 1;
+
+    char line[MAX_READ_SIZE];
+
+    while(running)
+    {
+
+        pid_t PID;
+
+        readLine(line,MAX_READ_SIZE);
+
+        if(!strncmp(line,"quit",4) ){
+            running = 0;
+        }
+        else
+        if(!strncmp(line,"login :",7) )
+        {
+            //frok
+
+            int parentToChild[2];
+            int childToParent[2];
+
+            if(-1 == pipe(parentToChild))
+            {
+                perror("Error creating pipe parentToChild\n");
+                exit(1);
+            }
+
+            if(-1 == pipe(childToParent))
+            {
+                perror("Error creating pipe childToParent\n");
+                exit(2);
+            }
+
+            if( -1 == (PID = fork() ) ) 
+            {
+                perror("Error forking for \"login\" command.\n");
+                exit(11);
+            }
+
+            
+            
+            if(PID)
+            {
+                // PARENT PROCESS
+
+                // PIPE COMMUNICATION
+
+
+            }
+            else
+            {
+                // CHILD PROCESS
+            }
+            
+
+        }
+        else
+        if(!strncmp(line,"myfind",6) )
+        {
+            //frok
+            if(-1 == mknod(FIFO_NAME,S_IFIFO | 0666,0))
+            {
+                perror("Error creating FIFO\n");
+                exit(3);
+            }
+
+            if(-1 == (PID = fork() ) )
+            {
+                perror("Error forking for \"myfind\" command.\n");
+                exit(12);
+            }
+
+            
+            
+            if(PID)
+            {
+                // PARENT PROCESS
+
+                // FIFO COMMUNICATION
+
+
+                // PROCESARE
+
+
+            }
+            else
+            {
+                // CHILD PROCESS
+            }
+
+        }
+        else
+        if(!strncmp(line,"mystat",7) )
+        {
+            //frok
+            int socket[2];
+
+            if(-1 == socketpair(AF_UNIX,SOCK_STREAM,0,socket))
+            {
+                perror("Error creating socket\n");
+                exit(4); 
+            } 
+
+
+            if( -1 == (PID = fork() ) )
+            {
+                perror("Error forking for \"mystat\" command.\n");
+                exit(13);
+            }
+
+            if(PID)
+            {
+                // PARENT PROCESS
+
+                // SOCKET COMMUNICATION
+
+
+            }
+            else
+            {
+                // CHILD PROCESS
+            }
+            
+        }
+        else
+        {
+            // INVALID COMMAND
+        }
+        
+        if(fileExists(FIFO_NAME))
+        {
+            // https://www.geeksforgeeks.org/c-program-delete-file/
+            if( -1 == remove(FIFO_NAME) )
+            {
+                perror("Error at removing FIFO.\n");
+                exit(10);
+            }
+        }
+
+        printf("1st bucla\n\n");
+        break;
+    }
+
+
+
+    return 0;
+}
