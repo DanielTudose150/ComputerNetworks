@@ -1,2 +1,2 @@
-# Retele
-Folder for Retele homeworks.
+# Computer Networks
+Folder for Computer Networks homeworks.
