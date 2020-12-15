@@ -1,0 +1,8 @@
+http://www.cplusplus.com/forum/general/43469/ -> photo
+https://stackoverflow.com/questions/16762018/c-sending-image-via-http -> photo
+https://stackoverflow.com/questions/7664788/freopen-stdout-and-console/7664951#7664951 -> photo
+https://docs.microsoft.com/en-us/cpp/c-runtime-library/reference/dup-dup2?view=msvc-160 -> reassign stdout
+https://stackoverflow.com/questions/3125080/sending-images-over-c-sockets-linux/3125276 -> photo
+https://www.gtk.org -> C GUI library
+https://www.qt.io/developers -> C++ GUI library
+https://wiki.archlinux.org/index.php/qt -> qt
