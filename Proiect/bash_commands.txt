@@ -1,0 +1,2 @@
+server : gcc server.c connect4.c sessions.c -lpthread -std=c99 -o server.exe
+client : gcc client.c sessions.c -std=c99 -o client.exe
