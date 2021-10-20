@@ -5,6 +5,7 @@ void encryptBlockECB(const char* input, char* output,const char* key)
     AES_KEY aesKey;
     AES_set_encrypt_key(key,128,&aesKey);
     AES_encrypt(input,output,&aesKey);
+    output[16] = 0;
 }
 
 void decryptBlockECB(const char* input, char* output, const char* key)
@@ -12,6 +13,8 @@ void decryptBlockECB(const char* input, char* output, const char* key)
     AES_KEY aesKey;
     AES_set_decrypt_key(key,128,&aesKey);
     AES_decrypt(input,output,&aesKey);
+    output[16] = 0;
+
 }
 
 void xor(const char* in1, const char* in2, char* out)
@@ -27,6 +30,7 @@ void encryptInitialCFB(const char* input, char* output,const char* key, const ch
     char block[17];
     AES_encrypt(iv,block,&aesKey);
     xor(input,block,output);
+    output[16] = 0;
 }
 
 void encryptCFB(const char* input, char* output, const char* key, const char* ciphertext)
@@ -36,6 +40,7 @@ void encryptCFB(const char* input, char* output, const char* key, const char* ci
     char block[17];
     AES_encrypt(ciphertext,block,&aesKey);
     xor(input,block,output);
+    output[16] = 0;
 }
 
 void decryptCFB(const char* input, char* output, const char* key, const char* prevCiphertext)
@@ -45,4 +50,5 @@ void decryptCFB(const char* input, char* output, const char* key, const char* pr
     char block[17];
     AES_encrypt(prevCiphertext,block,&aesKey);
     xor(input,block,output);
+    output[16] = 0;
 }

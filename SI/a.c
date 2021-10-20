@@ -287,6 +287,7 @@ void createClient(void* arg)
     char ciphertext[17];
     length = 16;
     lenptr = &length;
+    int step = 0;
 
     if(!ECB)
     {
@@ -298,7 +299,11 @@ void createClient(void* arg)
     {
         while(fgets(buff,17,file))
         {
+            bzero(buffer,sizeof(buffer));
+            bzero(block,sizeof(block));
+            printf("====STEP %d=====\n\n",step++);
             printf("Buff:%s\nLen: %d\n\n",buff,strlen(buff));
+            length = strlen(buff);
 
             if(strlen(buff) < 16) 
             {
@@ -306,7 +311,7 @@ void createClient(void* arg)
             }
 
             encryptBlockECB(buff,block,K);
-            printf("EBuff:%s\n\n",block);
+            printf("EBuff:%s\nLen: %d\n\n",block,strlen(block));
             
             if(sendStringMessage(client.data.cd,block,lenptr) == -1)
             {

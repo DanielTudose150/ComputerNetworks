@@ -117,10 +117,15 @@ int main(int argc,char* argv[])
 
     printf("Received:\n\n");
     fflush(stdout);
+
+    int step = 0;
     if(ECB)
     {
         while(!finished)
         {
+            bzero(buff,sizeof(buff));
+            bzero(block,sizeof(block));
+            printf("====STEP %d=====\n\n",step++);
             if(receiveStringMessage(sd,buff,lenptr) == -1)
             {
                 printf("[CLIENT] Error receiving encrypted text");
@@ -139,7 +144,7 @@ int main(int argc,char* argv[])
             }
 
             printf("Scriu int\n");
-            if(sendIntMessage(sd,&finished) == -1)
+            if(sendIntMessage(sd,&ECB) == -1)
             {
                 printf("[CLIENT] Error sending int message.\n\n");
             }
