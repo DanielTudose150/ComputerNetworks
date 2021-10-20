@@ -264,6 +264,11 @@ int main(int argc, char *argv[])
 
     fclose(file);
 
+    if(sendIntMessage(sd, &ECB) == -1)
+    {
+        printf("Error sending int");
+    }
+
     printf("\n\nDecrypted text:\n\n");
     bzero(buff, sizeof(buff));
     file = fopen("result.txt", "r");

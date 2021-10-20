@@ -14,4 +14,6 @@ void encryptCFB(const char* input, char* output, const char* key, const char* ci
 
 void decryptCFB(const char* input, char* output, const char* key, const char* prevCiphertext);
 
+int containsNull(const char* buff);
+
 #endif

@@ -341,13 +341,6 @@ void createClient(void *arg)
             bzero(block, sizeof(block));
         }
 
-        strcpy(buffer, "exit");
-        length = strlen(buffer);
-        if (sendStringMessage(client.data.cd, message, lenptr) == -1)
-        {
-            printf("[SERVER] Error sending ending block\n");
-            fflush(stdout);
-        }
     }
     else
     {
@@ -448,21 +441,19 @@ void createClient(void *arg)
             bzero(buff, sizeof(buff));
             bzero(block, sizeof(block));
         }
-
-        strcpy(buffer, "exit");
-        length = strlen(buffer);
-        if (sendStringMessage(client.data.cd, message, lenptr) == -1)
-        {
-            printf("[SERVER] Error sending ending block\n");
-            fflush(stdout);
-        }
     }
-
+    
     strcpy(buffer, "exit");
     length = strlen(buffer);
     if (sendStringMessage(client.data.cd, message, lenptr) == -1)
     {
         printf("[SERVER] Error sending ending block\n");
+        fflush(stdout);
+    }
+
+    if(receiveIntMessage(client.data.cd, lenptr) == -1)
+    {
+        printf("[SERVER] Error receiving int");
         fflush(stdout);
     }
 

@@ -52,3 +52,11 @@ void decryptCFB(const char* input, char* output, const char* key, const char* pr
     xor(input,block,output);
     output[16] = 0;
 }
+
+int containsNull(const char* buff)
+{
+    for(int i=0;i<16;++i)
+        if(buff[i] == 0)
+            return 1;
+    return 0;
+}
